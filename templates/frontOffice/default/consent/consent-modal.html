@@ -1,0 +1,62 @@
+<div id="matomo-consent" style="
+    display: none;
+    text-align: center;
+    z-index: 105;
+    width: 100%;
+    position: fixed;
+    background-color: #3b3b3b;
+    align-content: center;
+    bottom: 0;
+    padding: 10px;
+    color: #ffffff;"
+>
+
+        <p>{intl l="This site uses Matomo to analyze traffic and help us to improve your user experience." d='matomomanager.fo.default'}</p>
+        <p>
+            {intl l="We process your IP address and cookies are stored on your browser for 13 months. This data is only processed by us and our web hosting platform. Please read our Privacy Policy to learn more." d='matomomanager.fo.default'}
+        </p>
+        <button class="Button inline" onclick="acceptConsent()">{intl l="Accept" d='matomomanager.fo.default'}</button>
+        <button class="Button inline" onclick="refuseConsent()" >{intl l="Refuse" d='matomomanager.fo.default'}</button>
+
+</div>
+
+<script>
+    var _paq = window._paq = window._paq || [];
+
+    let show_modal = localStorage.getItem('matomo_consent_check')
+    if(show_modal !== '1'){
+        document.getElementById("matomo-consent").style.display = "block";
+        document.getElementById("matomo-remove-consent").style.display = "none";
+    }else{
+        document.getElementById("matomo-consent").style.display = "none";
+        document.getElementById("matomo-remove-consent").style.display = "block";
+    }
+
+    function acceptConsent() {
+        {if $CONSENT_TRACKING}
+            _paq.push(['rememberConsentGiven']);
+        {else}
+            _paq.push(['rememberCookieConsentGiven']);
+        {/if}
+        localStorage.setItem('matomo_consent_check', '1');
+        document.getElementById("matomo-consent").style.display = "none";
+        document.getElementById("matomo-remove-consent").style.display = "block";
+    }
+
+    function refuseConsent() {
+        localStorage.setItem('matomo_consent_check', '1');
+        document.getElementById("matomo-consent").style.display = "none";
+    }
+
+    function removeConsent() {
+        {if $CONSENT_TRACKING}
+            _paq.push(['forgetConsentGiven']);
+        {else}
+            _paq.push(['forgetCookieConsentGiven']);
+        {/if}
+        localStorage.setItem('matomo_consent_check', '0');
+        document.getElementById("matomo-consent").style.display = "block";
+        document.getElementById("matomo-remove-consent").style.display = "none";
+    }
+
+</script>

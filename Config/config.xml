@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<config xmlns="http://thelia.net/schema/dic/config"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
+
+        <services>
+            <service id="tracking_service" alias="MatomoManager\Service\Tracking\TrackingService" public="true"/>
+            <service id="product_service" alias="MatomoManager\Service\Tracking\EventTracking\ProductTrackingService" public="true"/>
+        </services>
+
+        <hooks>
+            <hook id="matomo.configuration.hook" class="MatomoManager\Hook\AdminConfigurationHook" scope="request">
+                <tag name="hook.event_listener" event="module.configuration" type="back" method="configuration"/>
+                <tag name="hook.event_listener" event="module.config-js" type="back" method="configurationJs" />
+            </hook>
+
+            <hook id="matomo.front.hook" class="MatomoManager\Hook\FrontHook" scope="request">
+                <tag name="hook.event_listener" event="main.head-bottom" type="front" method="injectTracker"/>
+                <tag name="hook.event_listener" event="main.after-javascript-include" type="front" method="injectConsent"/>
+                <tag name="hook.event_listener" event="product.bottom" type="front" method="injectProductTracker" />
+                <tag name="hook.event_listener" event="main.footer-bottom" type="front" method="onMainFooterBottom" />
+                <argument type="service" id="tracking_service"/>
+                <argument type="service" id="product_service"/>
+            </hook>
+        </hooks>
+</config>

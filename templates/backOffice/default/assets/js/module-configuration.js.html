@@ -1,0 +1,36 @@
+<script type="application/javascript">
+    const currentMode = '{module_config key="matomo_configuration_mode" module="MatomoManager" locale="en_US"}';
+    const modeSelector = document.getElementById('matomo_configuration_mode');
+
+    showConfigElements(currentMode);
+
+    modeSelector.addEventListener('change', function () {
+        var form = new FormData(document.getElementById('setConfigurationMode'));
+
+        fetch("{url path='/admin/module/MatomoManager/config/configuration-mode/save'}", {
+            method: 'post',
+            body: form,
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            },
+        }).then(
+            response => response.json()
+        ).then(function (data) {
+            showConfigElements(data.matomo_configuration_mode);
+        }).catch((error) => {
+            console.log(error)
+        })
+    });
+
+    function showConfigElements(currentMode = null) {
+        const configElements = document.getElementsByClassName('matomo-config-mode');
+        Array.from(configElements).forEach(function (configElement) {
+            if (configElement.id === currentMode) {
+                configElement.style.display = "block";
+            } else {
+                configElement.style.display = "none";
+            }
+
+        });
+    }
+</script>

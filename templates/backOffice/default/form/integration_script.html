@@ -1,0 +1,19 @@
+<div class="form-container">
+    <div class="col-md-12">
+        {form name="matomomanager_form_integration_script"}
+            <form method="POST" action="{url path="/admin/module/MatomoManager/config/integration-script/save"}" {form_enctype} class="clearfix">
+
+                {form_hidden_fields}
+
+                {render_form_field field='matomo_integration_script'}
+
+                {render_form_field field="success_url" value={url path='/admin/module/MatomoManager'}}
+                {render_form_field field="error_url" value={url path='/admin/module/MatomoManager'}}
+
+                <button type="submit" value="save" class="form-submit-button btn btn-sm btn-default" title="{intl l='Save' d='matomomanager.bo.default'}">
+                    {intl l='Save' d='matomomanager.bo.default' }
+                </button>
+            </form>
+        {/form}
+    </div>
+</div>
