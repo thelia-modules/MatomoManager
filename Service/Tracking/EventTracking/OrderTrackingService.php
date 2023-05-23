@@ -24,18 +24,17 @@ class OrderTrackingService
         try {
             $matomoTracker = MatomoManager::buildApiTracker();
 
-            $total = $order->getTotalAmount();
-            $totalWithoutTax = $order->getTotalAmount($tax, false);
+            $tax = $itemsTax = 0;
 
-            $tax = 0;
-            $tax = $total - $totalWithoutTax;
+            $amount = $order->getTotalAmount($tax);
+            $itemsAmount = $order->getTotalAmount($itemsTax, false, false);
 
             $this->trackOrderProductItems($order, $matomoTracker);
 
             $matomoTracker->doTrackEcommerceOrder(
                 $order->getId(),
-                (float)$total,
-                (float)$totalWithoutTax,
+                (float)$amount,
+                (float)$itemsAmount,
                 (float)$tax,
                 (float)$order->getPostage(),
                 (float)$order->getDiscount()
