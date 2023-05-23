@@ -2,26 +2,22 @@
 
 namespace MatomoManager\Hook;
 
+use ColissimoLabel\Exception\Exception;
 use MatomoManager\MatomoManager;
 use MatomoManager\Service\Tracking\EventTracking\ProductTrackingService;
 use MatomoManager\Service\Tracking\TrackingService;
-use Propel\Runtime\Exception\PropelException;
 use Thelia\Core\Event\Hook\HookRenderEvent;
 use Thelia\Core\Hook\BaseHook;
+use Thelia\Log\Tlog;
 use Thelia\Model\ProductQuery;
 
 class FrontHook extends BaseHook
 {
-    protected $productTrackingService;
-    protected $trackingService;
-
     public function __construct(
-        TrackingService        $trackingService,
-        ProductTrackingService $productTrackingService
+        protected TrackingService        $trackingService,
+        protected ProductTrackingService $productTrackingService
     )
     {
-        $this->productTrackingService = $productTrackingService;
-        $this->trackingService = $trackingService;
     }
 
     public function injectTracker(HookRenderEvent $event): void
@@ -42,27 +38,29 @@ class FrontHook extends BaseHook
         $event->add($this->render('consent/consent-modal.html'));
     }
 
-    /**
-     * @throws PropelException
-     */
     public function injectProductTracker(HookRenderEvent $event): void
     {
-        if (!MatomoManager::getConfigValue('matomo_ecommerce_track_product')) {
-            return;
+        try {
+            if (!MatomoManager::getConfigValue('matomo_ecommerce_track_product')) {
+                throw new Exception("Configuration ecommerce not found.");
+            }
+
+            $productId = $event->getArgument('product');
+
+            $product = ProductQuery::create()->findPk($productId);
+
+            if (!$product) {
+                throw new Exception("Product not found.");
+            }
+
+            $this->productTrackingService->trackProduct($product);
+
+        } catch (\Exception $ex) {
+            Tlog::getInstance()->addError(sprintf("Matomo product Tracker error : %s", $ex->getMessage()));
         }
-
-        $productId = $event->getArgument('product');
-
-        $product = ProductQuery::create()->findPk($productId);
-
-        if (!$product) {
-            return;
-        }
-
-        $this->productTrackingService->trackProduct($product);
     }
 
-    public function onMainFooterBottom(HookRenderEvent $event)
+    public function onMainFooterBottom(HookRenderEvent $event): void
     {
         $event->add($this->render('consent/remove-consent.html', [
             'CONSENT_TRACKING' => MatomoManager::getConfigValue('matomo_ecommerce_consent_tracking')

@@ -12,6 +12,8 @@ class TrackingService
      */
     public function getTrackerTemplatePrameters(string $action): array
     {
+        $parameters = [];
+
         switch ($action) {
             case 'integration_script':
                 $parameters = [
@@ -24,7 +26,7 @@ class TrackingService
                 preg_match('/(https?:\/\/)(.*)/', $url, $matches);
 
                 $parameters = [
-                    'URL_MATOMO' => $matches[2],
+                    'URL_MATOMO' => $matches[2] ?? $url,
                     'SITE_ID' => MatomoManager::getConfigValue('matomo_site_id'),
                     'CONSENT_TRACKING' => MatomoManager::getConfigValue('matomo_ecommerce_consent_tracking')
                 ];

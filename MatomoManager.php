@@ -3,19 +3,13 @@
 namespace MatomoManager;
 
 use MatomoTracker;
-use Propel\Runtime\Connection\ConnectionInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
-use Thelia\Model\ConfigQuery;
-use Thelia\Model\LangQuery;
 use Thelia\Module\BaseModule;
 
 class MatomoManager extends BaseModule
 {
     /** @var string */
     const DOMAIN_NAME = 'matomotagmanager';
-
-    /** @var string */
-    const MODULE_CODE = 'MatomoManager';
 
     const CONFIGURATION_PARAMETERS = [
         'matomo_site_id',
@@ -32,9 +26,6 @@ class MatomoManager extends BaseModule
         'matomo_ecommerce_consent_tracking'
     ];
 
-    /**
-     * @return MatomoTracker
-     */
     public static function buildApiTracker() : MatomoTracker
     {
         $matomoSiteId = MatomoManager::getConfigValue('matomo_site_id');
@@ -54,7 +45,7 @@ class MatomoManager extends BaseModule
     {
         $servicesConfigurator->load(self::getModuleCode() . '\\', __DIR__)
             ->exclude([THELIA_MODULE_DIR . ucfirst(self::getModuleCode()) . '/I18n/*'])
-            ->autowire(true)
-            ->autoconfigure(true);
+            ->autowire()
+            ->autoconfigure();
     }
 }

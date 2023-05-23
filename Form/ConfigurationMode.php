@@ -10,7 +10,7 @@ use Thelia\Form\BaseForm;
 
 class ConfigurationMode extends BaseForm
 {
-    protected function buildForm()
+    protected function buildForm() : void
     {
         $form = $this->formBuilder;
 

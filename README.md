@@ -1,13 +1,8 @@
 # Matomo Tag Manager
 
-This module is made to use the Matomo Tag Manager tool.
+This module is made to use the Matomo Tag Manager.
 
 ## Installation
-
-### Manually
-
-* Copy the module into ```<thelia_root>/local/modules/``` directory and be sure that the name of the module is GoogleTagManager.
-* Activate it in your thelia administration panel
 
 ### Composer
 

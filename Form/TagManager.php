@@ -11,7 +11,7 @@ use Thelia\Form\BaseForm;
 
 class TagManager extends BaseForm
 {
-    protected function buildForm()
+    protected function buildForm() : void
     {
         $matomomanagerContainer = MatomoManager::getConfigValue('matomo_tag_manager_container');
         $matomomanagerEnv = MatomoManager::getConfigValue('matomo_tag_manager_env', 'live');
@@ -63,6 +63,6 @@ class TagManager extends BaseForm
                     ],
                     'required' => true
                 ]
-            );;
+            );
     }
 }

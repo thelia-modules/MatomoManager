@@ -7,6 +7,7 @@ use MatomoManager\MatomoManager;
 use MatomoTracker;
 use Propel\Runtime\Exception\PropelException;
 use Thelia\Core\HttpFoundation\Session\Session;
+use Thelia\Log\Tlog;
 use Thelia\Model\CategoryQuery;
 use Thelia\Model\Order;
 use Thelia\Model\OrderProduct;
@@ -16,40 +17,38 @@ class OrderTrackingService
 {
     public function __construct(protected Session $session)
     {
-
     }
 
-    /**
-     * @param Order $order
-     * @throws PropelException
-     */
-    public function trackOrderPaid(Order $order, $notPaid = false): void
+    public function trackOrderPaid(Order $order): void
     {
-        $matomoTracker = MatomoManager::buildApiTracker();
+        try {
+            $matomoTracker = MatomoManager::buildApiTracker();
 
-        $total = $order->getTotalAmount();
-        $totalWithoutTax = $order->getTotalAmount($tax, false);
+            $total = $order->getTotalAmount();
+            $totalWithoutTax = $order->getTotalAmount($tax, false);
 
-        $tax = 0;
-        $tax = $total - $totalWithoutTax;
+            $tax = 0;
+            $tax = $total - $totalWithoutTax;
 
-        $this->trackOrderProductItems($order, $matomoTracker);
+            $this->trackOrderProductItems($order, $matomoTracker);
 
-        $matomoTracker->doTrackEcommerceOrder(
-            $order->getId(),
-            (float)$total,
-            (float)$totalWithoutTax,
-            (float)$tax,
-            (float)$order->getPostage(),
-            (float)$order->getDiscount()
-        );
+            $matomoTracker->doTrackEcommerceOrder(
+                $order->getId(),
+                (float)$total,
+                (float)$totalWithoutTax,
+                (float)$tax,
+                (float)$order->getPostage(),
+                (float)$order->getDiscount()
+            );
 
-        $matomoTracker->doTrackPageView('Order Pay');
+            $matomoTracker->doTrackPageView('Order Pay');
+        } catch (Exception $ex) {
+            Tlog::getInstance()->addError(sprintf("Matomo order paid Tracker error : %s", $ex->getMessage()));
+        }
     }
 
     /**
-     * @throws PropelException
-     * @throws Exception
+     * @throws PropelException | Exception
      */
     protected function trackOrderProductItems(Order $order, MatomoTracker $matomoTracker = null): void
     {

@@ -11,7 +11,7 @@ use Thelia\Form\BaseForm;
 
 class Analytics extends BaseForm
 {
-    protected function buildForm()
+    protected function buildForm(): void
     {
         $form = $this->formBuilder;
 
