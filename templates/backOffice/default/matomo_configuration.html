@@ -7,7 +7,7 @@
 
     <div class="row">
         <div class="col-md-12 ">
-            <div class="alert-info">
+            <div class="alert alert-info">
                 {intl l='Plusieurs modes de configuration sont possibles :' d='matomomanager.bo.default'}
                 <ul>
                     <li>{intl l='Use script => Accès direct au code d\'intégration injecté' d='matomomanager.bo.default'}</li>
@@ -63,32 +63,29 @@
                         {render_form_field field="error_url" value={url path='/admin/module/MatomoManager'}}
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12 form-group ">
                                 {render_form_field field='matomo_token_api'}
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12 form-group ">
                                 {render_form_field field='matomo_ecommerce_track_order'}
-                            </div>
-                            <div class="col-md-12">
                                 {render_form_field field='matomo_ecommerce_track_cart'}
-                            </div>
-                            <div class="col-md-12">
                                 {render_form_field field='matomo_ecommerce_track_product'}
                             </div>
-                            <div class="col-md-12">
-                                {render_form_field field='matomo_ecommerce_track_search'}
-                            </div>
-                            <div class="col-md-12">
+                            <div class="col-md-12 form-group">
                                 {render_form_field field='matomo_ecommerce_consent_tracking'}
                             </div>
                         </div>
 
-                        <button type="submit" value="save" class="form-submit-button btn btn-sm btn-default right" title="{intl l='Save tracking configuration' d='matomomanager.bo.default'}">
-                            {intl l='Save tracking configuration' d='matomomanager.bo.default' }
-                        </button>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="submit" value="save" class="form-submit-button btn btn-sm btn-default" title="{intl l='Save tracking configuration' d='matomomanager.bo.default'}">
+                                    {intl l='Save tracking configuration' d='matomomanager.bo.default' }
+                                </button>
+                            </div>
+                        </div>
                     </form>
                 {/form}
             </div>
