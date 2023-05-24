@@ -1,3 +1,4 @@
+{if $needCheckConsent|default:false && $CONSENT_TRACKING|default:null}
 <div id="matomo-consent" style="
     display: none;
     text-align: center;
@@ -60,3 +61,4 @@
     }
 
 </script>
+{/if}

@@ -2,7 +2,7 @@
 
 namespace MatomoManager\Hook;
 
-use ColissimoLabel\Exception\Exception;
+use Exception;
 use MatomoManager\MatomoManager;
 use MatomoManager\Service\Tracking\EventTracking\ProductTrackingService;
 use MatomoManager\Service\Tracking\TrackingService;
@@ -22,20 +22,34 @@ class FrontHook extends BaseHook
 
     public function injectTracker(HookRenderEvent $event): void
     {
-        $action = MatomoManager::getConfigValue('matomo_configuration_mode');
+        if (!$action = MatomoManager::getConfigValue('matomo_configuration_mode')) {
+            return;
+        }
 
-        $event->add(
-            $this->render(
-                'tracker/' . $action . '.html',
+        try {
+            $trackerTemplateParameters = $this->trackingService->getTrackerTemplateParameters($action);
 
-                $this->trackingService->getTrackerTemplatePrameters($action)
-            )
-        );
+            $event->add(
+                $this->render('tracker/' . $action . '.html',$trackerTemplateParameters)
+            );
+
+        } catch (Exception $ex) {
+            Tlog::getInstance()->addError("Matomo configuration error : " . $ex->getMessage());
+        }
     }
 
     public function injectConsent(HookRenderEvent $event): void
     {
-        $event->add($this->render('consent/consent-modal.html'));
+        $event->add($this->render('consent/consent-modal.html',
+            [
+                "needCheckConsent" =>
+                    MatomoManager::getConfigValue('matomo_ecommerce_consent_tracking')
+                    &&
+                    MatomoManager::getConfigValue('matomo_ecommerce_track_product'),
+
+                'CONSENT_TRACKING' => MatomoManager::getConfigValue('matomo_ecommerce_consent_tracking')
+            ]
+        ));
     }
 
     public function injectProductTracker(HookRenderEvent $event): void
