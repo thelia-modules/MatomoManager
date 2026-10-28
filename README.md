@@ -1,5 +1,8 @@
 # Matomo Tag Manager
 
+> This module is no longer maintained and will not be ported to Thelia 3. Its 2.x versions remain available on Packagist.
+> For audience tracking, use [GoogleTagManager](https://github.com/thelia-modules/GoogleTagManager) (`thelia/google-tag-manager-module`) instead.
+
 This module is made to use the Matomo Tag Manager.
 
 ## Installation

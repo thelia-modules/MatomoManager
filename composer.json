@@ -8,5 +8,6 @@
   },
   "extra": {
     "installer-name": "MatomoManager"
-  }
+  },
+  "abandoned": "thelia/google-tag-manager-module"
 }
